@@ -1,0 +1,269 @@
+print(""" 
+
+  ------------------------------------------------------
+ |======================================================| 
+ |======== Welcome To School Management System ========|
+ |======================================================|
+  ------------------------------------------------------""")
+
+
+import mysql.connector as pyscon
+
+mycon=pyscon.connect(host="localhost",user="root",passwd="admin",database="smanagement")
+
+csr=mycon.cursor()
+
+if mycon.is_connected:
+    print("\n\nConnected To MySQl database successfully.......")
+
+def insertinstu():
+    admno=int(input("Enter admission number :  "))
+    name=input("Enter name :  ")
+    dob=input("Enter date of birth :  ")
+    mname=input("Enter Mother's name :  ")
+    fname=input("Enter Father's name :  ")
+    cyear=input("Enter student's current year :  ")
+
+    cmd="INSERT INTO STUDENTS VALUES(%s,%s,%s,%s,%s,%s)"
+    rec=(admno,name,dob,mname,fname,cyear)
+    csr.execute(cmd,rec)
+    mycon.commit()
+    print("\n\n\t\tDATA SUCCESSFULLY ENTERED IN STUDENTS")
+
+def delinstu():                   
+    admno=int(input("Enter Admission no :"))
+    qry="SELECT * FROM students WHERE admno=%s"
+    rec=(admno,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+                
+    if count!=0:
+        print("\t\tRecord found.........:\n")
+        for (admno,name,dob,mname,fname,cyear) in data:
+            print("Admission No : ",admno)
+            print("Student's Name : ",name)
+            print("Date Of Birth : ",dob)
+            print("Mother's Name : ",mname)
+            print("Father's Name : ",fname)
+            print("Current Year : ",cyear)
+            print(".................................")
+
+        opt=input("Are you SURE to DELETE above record (Y/N)...:")
+        if opt=="Y" or opt=="y" :
+            qry= "DELETE FROM students WHERE admno=%s"
+            rec=(admno,)
+            csr.execute(qry,rec)
+            print("\n\t\tRecord deleted Successfully...... ")
+            mycon.commit()
+
+    else:
+        print("\t\t\t Record NOT found..!!!")
+
+def displaystu():
+    qry="select * from students"
+    csr.execute(qry)
+    data=csr.fetchall()
+    count=csr.rowcount
+    print("\t\tTotal Student  Records........",count,"\n")
+    for (admno,name,dob,mname,fname,cyear) in data:
+                print("Admission No : ",admno)
+                print("Student's Name : ",name)
+                print("Date Of Birth : ",dob)
+                print("Mother's Name : ",mname)
+                print("Father's Name : ",fname)
+                print("Current Year : ",cyear)
+                print(".................................")
+
+def searchinstu():
+    admno=int(input("Enter Admission no :"))
+    qry="SELECT * FROM students WHERE admno=%s"
+    rec=(admno,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+    if count!=0:
+        print("\t\tRecord found.........:\n")
+        for (admno,name,dob,mname,fname,cyear) in data:
+            print("Admission No : ",admno)
+            print("Student's Name : ",name)
+            print("Date Of Birth : ",dob)
+            print("Mother's Name : ",mname)
+            print("Father's Name : ",fname)
+            print("Current Year : ",cyear)
+            print(".................................")
+    else:
+        print("\t\t\t Record  NOT found..!!!")
+
+
+def updateinstu():
+    admno=int(input("Enter Admission no :"))
+    qry="SELECT * FROM students WHERE admno=%s"
+    rec=(admno,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+    if count!=0:
+        print("\t\tRecord found.........:\n")
+        for (admno,name,dob,mname,fname,cyear) in data:
+            print("Admission No : ",admno)
+            print("Student's Name : ",name)
+            print("Date Of Birth : ",dob)
+            print("Mother's Name : ",mname)
+            print("Father's Name : ",fname)
+            print("Current Year : ",cyear)
+            print(".................................")
+
+        opt=input("Are You Sure To Update Above Record(Y/N)...")
+        if opt=="Y" or opt=="y":
+            print("\n\t\tEnter New Data...")
+            name=input("Enter name :  ")
+            dob=input("Enter date of birth :  ")
+            mname=input("Enter Mother's name :  ")
+            fname=input("Enter Father's name :  ")
+            cyear=input("Enter student's current year :  ")
+
+            qry=("update students set name=%s,dob=%s,mname=%s,fname=%s,cyear=%s where admno=%s")
+            rec=(name,dob,mname,fname,cyear,admno)
+            csr.execute(qry,rec)
+            mycon.commit()
+            print("\n\t\tRecord Updated Successfully...... ")
+    else:
+        print("\t\t\t Record NOT found..!!!")
+
+def insertinT():
+    tname=input("Enter Name :  ")
+    tsub=input("Enter Teacher's Subject :  ")
+    tid=int(input("Enter Teacher's ID :  "))
+    qry="INSERT INTO TEACHERS VALUES(%s,%s,%s)"
+    rec=(tname,tsub,tid)
+    csr.execute(qry,rec)
+    mycon.commit()
+    print("\n\n\t\tDATA SUCCESSFULLY ENTERED IN TEACHERS....")
+
+
+def displayT():
+    qry="select * from teachers"
+    csr.execute(qry)
+    data=csr.fetchall()
+    count=csr.rowcount
+    print("\t\tTotal Teacher Records........",count,"\n")
+    for (tname,tsub,tid) in data:
+        print("Name :  ",tname)
+        print("Subject :  ",tsub)
+        print("Teacher's ID :  ",tid)
+        print("........................")
+
+
+def searchinT():
+    tid=int(input("Enter Teacher's ID :"))
+    qry="SELECT * FROM teachers WHERE tid=%s"
+    rec=(tid,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+    if count!=0:
+        print("\n\t\tRecord found.........:\n")
+        for (tname,tsub,tid) in data:
+            print("Name :  ",tname)
+            print("Subject :  ",tsub)
+            print("Teacher's ID :  ",tid)
+            print("........................")
+    else:
+        print("\t\t\t Record  NOT found..!!!")
+
+def updateinT():
+    tid=int(input("Enter Teacher's ID :"))
+    qry="SELECT * FROM teachers WHERE tid=%s"
+    rec=(tid,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+    if count!=0:
+        print("\n\t\tRecord found.........:\n")
+        for (tname,tsub,tid) in data:
+            print("Name :  ",tname)
+            print("Subject :  ",tsub)
+            print("Teacher's ID :  ",tid)
+            print("........................")
+            
+        opt=input("Are You Sure To Update Above Record(Y/N)...")
+        if opt=="Y" or opt=="y":
+            print("\n\t\tEnter New Data...")
+            tname=input("Enter Name :  ")
+            tsub=input("Enter Subject :  ")
+            tid=int(input("Enter Teacher's ID :  "))
+            qry=("UPDATE TEACHERS SET tname=%s,tsub=%s where tid=%s")
+            rec=(tname,tsub,tid)
+            csr.execute(qry,rec)
+            mycon.commit()
+            print("\n\t\tRecord Updated Successfully...... ")
+    else:
+        print("\t\t\t Record NOT found..!!!")
+
+
+def delinT():
+    tid=int(input("Enter Teacher's ID :"))
+    qry="SELECT * FROM teachers WHERE tid=%s"
+    rec=(tid,)
+    csr.execute(qry,rec)
+    data=csr.fetchall()
+    count=csr.rowcount
+    if count!=0:
+        print("\n\t\tRecord found.........:\n")
+        for (tname,tsub,tid) in data:
+            print("Name :  ",tname)
+            print("Subject :  ",tsub)
+            print("Teacher's ID :  ",tid)
+            print("........................")
+            
+        opt=input("Are You Sure To DELETE Above Record(Y/N)...")
+        if opt=="Y" or opt=="y" :
+            qry= "DELETE FROM teachers WHERE tid=%s"
+            rec=(tid,)
+            csr.execute(qry,rec)
+            mycon.commit()
+            print("\n\t\tRecord deleted Successfully...... ")
+while True :
+    print("\n\t\t SCHOOL RECORD MANAGEMENT\n")
+    print("==================================")
+    print("\t\t 1. Add New Student record")
+    print("\t\t 2. Display Student record")
+    print("\t\t 3. Search Student record")
+    print("\t\t 4. Delete Student record")
+    print("\t\t 5. Update Student record")
+    print("\n\t\t 6. Add new Teacher record")
+    print("\t\t 7. Display Teacher record")
+    print("\t\t 8. Search Teacher record")
+    print("\t\t 9. Delete Teacher record")
+    print("\t\t 10. Update Teacher record")
+    print("\n\t\t 11. EXIT")
+    print("==================================")
+    choice=int(input("Enter choice 1-11:"))
+    if choice==1:
+        insertinstu()      
+    elif choice==2:
+        displaystu()      
+    elif choice==3:
+        searchinstu()       
+    elif choice==4:
+        delinstu()       
+    elif choice==5:
+        updateinstu()
+    elif choice==6:
+        insertinT()
+    elif choice==7:
+        displayT()
+    elif choice==8:
+        searchinT()
+    elif choice==9:
+        delinT()
+    elif choice==10:
+        updateinT()
+        
+    elif choice==11:
+        mycon.close()
+        print("\n\n\t Thanks have a nice day.........")
+        break
+    else :
+        print("\t!!!wrong choice... please enter choice 1-11:")
